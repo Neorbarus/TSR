@@ -1,7 +1,27 @@
 var http = require('http');
 var fs  = require('fs');
+var path = require('path');
 http.createServer(function (request, response) {
-  var
+  // Primero compruebo si no se ha especificado un recurso para servir index.html
+  if(request.url == "/") {
+    recurso = "/index.html";
+  }
+  else {
+    recurso = request.url;
+  }
+  var url = path.join(__dirname, recurso);
+  fs.readFile(url, 'utf-8', function(error, content) {
+    if(error) {
+      response.writeHead(404);
+      response.write("not found");
+      response.end("");
+    }
+    else {
+      response.writeHead(200);
+      response.write(content);
+      response.end();
+    }
+  });
   /*
   // response is a ServerResponse.
   // Its writeHead() method sets the response header.
